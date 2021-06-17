@@ -56,16 +56,41 @@ int sort_via_insertions(vector<int> a, int n) {
     for (int i = 1; i <= n; i++) {
         aux[i] = a[i]-i;
     }
-    int hoi = get_highest_offset_index(aux, n);
-    while (aux[hoi] != 0) {
-        fix_hoi(hoi, aux, n);
-        insertions++;
-        hoi = get_highest_offset_index(aux, n);
+
+    for (int i = 1; i <= n; ) {
+        int lc, rc, lc_value, rc_value, rc_index; //left candidate, right candidate (to be inserted correctly)
+        lc = i; //left candidate is always the current value
+        if (aux[lc] == 0) {
+            //then the element is already in the correct position, just continue and don't count it as an insertion
+            i++;
+            continue;
+        }
+        else {
+            lc_value = abs(aux[lc]);
+            //now we must discover the value that would like to come to the current position:
+            int desired_offset = -1; //the offset that makes the element go to the correct position
+            for (int j = i + 1; j <= n; j++) {
+                if (aux[j] ==  desired_offset--) {
+                    rc_value = abs(aux[j]);
+                    rc_index = j;
+                    break;
+                }
+            } //should always be able to find a value (verify)
+            if (lc_value > rc_value) {
+                fix_hoi(i, aux, n);
+            }
+            else if (rc_value > lc_value) {
+                fix_hoi(rc_index, aux, n);
+                i++; //increment only when you pick the right-most candidate
+            }
+            else {
+                //if they are equal, pick left value
+                fix_hoi(i, aux, n);
+            }
+            insertions++;
+        }
     }
-    // cout << endl;
-    // display(a, n);
-    // display(aux, n);
-    // cout << endl;
+
     cout << "offset vector at the end: " << endl;
     display(aux, n);
     return insertions;
@@ -81,6 +106,12 @@ void count_sortable_permutations(vector<int> a, int n)
     // Find all possible permutations
     // cout << "Possible permutations are:\n";
     do {
+    // a[1] = 6;
+    // a[2] = 5;
+    // a[3] = 4;
+    // a[4] = 3;
+    // a[5] = 2;
+    // a[6] = 1;
         cout << endl << endl;
         cout << "initial vector: " << endl;
         display(a, n);
