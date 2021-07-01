@@ -1,0 +1,7 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "DB:lib"
+
+    - path: "./app/DB.hs"
+      component: "DB:exe:DB"

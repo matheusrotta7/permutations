@@ -1,0 +1,4 @@
+[submodule "rev_trans/quickcheck"]
+	path = rev_trans/quickcheck
+	url = http://software.legiasoft.com/git/quickcheck.git
+	branch = master

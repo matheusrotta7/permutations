@@ -1,0 +1,42 @@
+name:                DB
+version:             0.1.0.0
+author:              "Gabriel Siqueira"
+maintainer:          "gabriel.gabrielhs@gmail.com"
+
+dependencies:
+- base >= 4.14 && < 5
+- MonadRandom
+- bytestring
+- containers
+- deepseq
+- hashable
+- hedgehog
+- lifted-async
+- optparse-applicative
+- parallel-io
+- process
+- random
+- random-shuffle
+- suffixtree
+- text
+- time
+- transformers
+- unordered-containers
+- vector
+
+library:
+  source-dirs: src
+
+executables:
+  DB:
+    main:                DB.hs
+    source-dirs:         app
+    ghc-options:
+    - -main-is DB
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -O2
+    # - -fno-ignore-asserts
+    dependencies:
+    - DB
