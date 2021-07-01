@@ -84,8 +84,9 @@ int sort_via_insertions(vector<int> a, int n) {
                 i++; //increment only when you pick the right-most candidate
             }
             else {
-                //if they are equal, pick left value
-                fix_hoi(i, aux, n);
+                //if they are equal, pick right value
+                fix_hoi(rc_index, aux, n);
+                i++;
             }
             insertions++;
         }
@@ -105,19 +106,20 @@ void count_sortable_permutations(vector<int> a, int n)
 
     // Find all possible permutations
     // cout << "Possible permutations are:\n";
-    do {
-    // a[1] = 6;
-    // a[2] = 5;
-    // a[3] = 4;
-    // a[4] = 3;
-    // a[5] = 2;
-    // a[6] = 1;
+    // do {
+    //4  1  5  6  2  3
+    a[1] = 4;
+    a[2] = 1;
+    a[3] = 5;
+    a[4] = 6;
+    a[5] = 2;
+    a[6] = 3;
         cout << endl << endl;
         cout << "initial vector: " << endl;
         display(a, n);
         int insertions = sort_via_insertions(a, n);
         cout << "number of necessary insertions: "<< insertions << endl;
-    } while (next_permutation(a.begin() + 1, a.end()));
+    // } while (next_permutation(a.begin() + 1, a.end()));
 
 }
 
