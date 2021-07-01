@@ -97,7 +97,7 @@ main = do
 
 genGenome :: Args -> Rand StdGen ByteString
 genGenome Args {..} = do
-  let g = fromGeneList False [1 .. (intToGene $ coerce db_size)]
+  let g = fromGeneList True [1 .. (intToGene $ coerce db_size)]
   h <-
     if db_nop == -1
       then rearrangeGenome g
