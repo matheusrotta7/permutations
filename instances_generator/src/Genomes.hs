@@ -147,7 +147,7 @@ insert :: Idx -> Idx -> Genome -> Genome
 insert i j g =
   assert (2 <= i)
     . assert (i <= coerce (genomeSize g) - 1)
-    . assert (1 <= j)
+    . assert (2 <= j)
     . assert (j <= coerce (genomeSize g) - 1)
     $ g'
   where

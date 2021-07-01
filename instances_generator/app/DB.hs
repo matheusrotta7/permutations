@@ -138,5 +138,5 @@ genGenome Args {..} = do
         return $ swap i j g
     applyOperation Insertion_ g = do
         i <- getRandomR (2 :: Idx, coerce db_size - 1)
-        j <- getRandomR (1 :: Idx, coerce db_size - 1)
+        j <- getRandomR (2 :: Idx, coerce db_size - 1)
         return $ insert i j g
