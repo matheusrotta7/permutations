@@ -177,7 +177,7 @@ int reversal_distance_estimation(Permutation pi) {
 
   while (!pi.is_iota()) {
     ok = apply_2sbp_det_rev(pi) || apply_1sbp_det_rev(pi) ||
-         apply_0sbp_fulldet_rev(pi);
+         apply_0sbp_rev(pi);
     if (!ok) {
       int e = pi.end_of_strong_strip(1);
       pi.reversal(e + 1, pi.pos(e));
