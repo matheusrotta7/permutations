@@ -11,6 +11,7 @@ protected:
   unique_ptr<vector<Gene>> genes;
   unique_ptr<vector<Gene>> positions;
   Gene op_max;
+  int correctly_position;
   void record_positions();
 
 public:
@@ -24,6 +25,8 @@ public:
   bool is_iota() const;
   /* Size of permutation */
   size_t size() const { return genes->size(); }
+  /* Number of correctly positions elements */
+  int correctly_position_el() const {return correctly_position; }
   /* Check in gene is the begin of a breakpoint */
   bool breakpoint(int) const;
   bool strong_breakpoint(int) const;

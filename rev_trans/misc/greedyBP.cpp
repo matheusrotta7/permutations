@@ -2,18 +2,24 @@
 #include <cassert>
 #include <cmath>
 
-/* Try to apply a full deterministic reversal that do not add a strong
- * breakpoint, return false if not possible */
-bool apply_0sbp_fulldet_rev(Permutation &pi) {
+/* Try to apply a partially deterministic reversal that do not add a strong
+ * breakpoint and increase the number of correctly position elements, return
+ * false if not possible */
+bool apply_0sbp_rev(Permutation &pi) {
   int i, j;
 
   for (size_t l = 2; l < pi.size(); l++) {
     j = max(int(l), pi[l] + 1);
     i = min(int(l), pi[l] + 1);
-    if (i != j && pi[pi[l] + 1] == int(l) - 1 && pi.strong_breakpoint(i - 1) &&
-        pi.strong_breakpoint(j)) {
+    int bp_change = pi.strong_breakpoint(i - 1) + pi.strong_breakpoint(j) -
+                    (abs(pi[j] - pi[i - 1]) == 1) -
+                    (abs(pi[j + 1] - pi[i]) == 1);
+    if (bp_change == 0) {
+      int old_correct = pi.correctly_position_el();
       pi.reversal(i, j);
-      return true;
+      if (old_correct < pi.correctly_position_el())
+        return true;
+      pi.reversal(i, j);
     }
   }
   return false;

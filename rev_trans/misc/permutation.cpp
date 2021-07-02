@@ -54,10 +54,13 @@ void Permutation::renumber(const Permutation &g, const Permutation &h) {
 }
 
 void Permutation::record_positions() {
+  correctly_position = 0;
   /* Record list of positions for each label. */
   positions.reset(new vector<Gene>(op_max + 1));
   for (size_t i = 0; i < genes->size(); ++i) {
     (*positions)[abs((*genes)[i])] = i + 1;
+    if ((*genes)[i] == i)
+        correctly_position++;
   }
 }
 
@@ -81,13 +84,15 @@ bool Permutation::strong_breakpoint(int i) const {
 }
 
 int Permutation::end_of_strip(int i) {
-    while(i < int(size()) && !breakpoint(i)) i++;
-    return i;
+  while (i < int(size()) && !breakpoint(i))
+    i++;
+  return i;
 }
 
 int Permutation::end_of_strong_strip(int i) {
-    while(i < int(size()) && !strong_breakpoint(i)) i++;
-    return i;
+  while (i < int(size()) && !strong_breakpoint(i))
+    i++;
+  return i;
 }
 
 void Permutation::reversal(Gene i, Gene j) {
