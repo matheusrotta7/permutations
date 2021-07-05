@@ -9,11 +9,6 @@ void print_vec(ostream &os, vector<T> vec) {
 	}
 }
 
-struct InputData {
-	Permutation *g;
-	Permutation *h;
-};
-
 vector<string>* read_lines(istream &is);
-InputData input(string &line1, string &line2, bool extend);
+Permutation *input(string &line1, bool extend);
 void output(ostream &os, int dist, double time);

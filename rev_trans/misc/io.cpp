@@ -15,17 +15,9 @@ vector<string> *read_lines(istream &is) {
   return input_lines;
 }
 
-InputData input(string &line1, string &line2, bool extend) {
-  string str;
-  InputData data;
-
-  data.g = new Permutation(line1, extend);
-  data.h = new Permutation(line2, extend);
-  if (data.g->size() != data.h->size()) {
-    throw invalid_argument("Size of genomes differ");
-  }
-
-  return data;
+Permutation *input(string &line1, bool extend) {
+  Permutation *pi = new Permutation(line1, extend);
+  return pi;
 }
 
 void output(ostream &os, int dist, double time) {

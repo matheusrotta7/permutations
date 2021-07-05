@@ -99,21 +99,13 @@ int main(int argc, char *argv[]) {
   }
 
   try {
-    if (input_lines->size() % 4 == 1) {
-      throw invalid_argument("Number of lines is not multiple of 4.");
-    }
 #pragma omp parallel for
-    for (size_t i = 0; i < input_lines->size(); i += 4) {
+    for (size_t i = 0; i < input_lines->size(); i++) {
       Timer timer;
       ofstream os;
       int dist;
 
-      InputData data =
-          input((*input_lines)[i], (*input_lines)[i + 1], args.extend);
-      auto g = unique_ptr<Permutation>(data.g);
-      auto h = unique_ptr<Permutation>(data.h);
-      auto pi = unique_ptr<Permutation>(new Permutation());
-      pi->renumber(*g, *h);
+      auto pi = unique_ptr<Permutation>(input((*input_lines)[i], args.extend));
 
       // run algorithm
       if (args.alg == "rev") {
@@ -123,13 +115,14 @@ int main(int argc, char *argv[]) {
       } else if (args.alg == "revtrans") {
         dist = reversal_and_transposition_distance_estimation(*pi);
       } else {
+		help(argv[0]);
       }
 
       if (args.output_folder != "") {
         os.close();
         os.open(args.output_folder + '/' +
                 fs::path(args.input_file).filename().c_str() +
-                string(5 - to_string(i / 4).size(), '0') + to_string(i / 4));
+                string(5 - to_string(i).size(), '0') + to_string(i));
       }
 
       if (args.output_folder != "") {
