@@ -1,19 +1,20 @@
 #include "greedyBP.hpp"
 #include <cassert>
 #include <cmath>
+#include <limits>
 
 /* Try to apply a partially deterministic reversal that do not add a strong
  * breakpoint and increase the number of correctly position elements, return
  * false if not possible */
-bool apply_0sbp_rev(Permutation &pi) {
+bool apply_0sbp_fulldet_rev(Permutation &pi) {
   int i, j;
 
   for (size_t l = 2; l < pi.size(); l++) {
     j = max(int(l), pi[l] + 1);
     i = min(int(l), pi[l] + 1);
     int bp_change = pi.strong_breakpoint(i - 1) + pi.strong_breakpoint(j) -
-                    (abs(pi[j] - pi[i - 1]) == 1) -
-                    (abs(pi[j + 1] - pi[i]) == 1);
+                    (abs(pi[j] - pi[i - 1]) != 1) -
+                    (abs(pi[j + 1] - pi[i]) != 1);
     if (bp_change == 0) {
       int old_correct = pi.correctly_position_el();
       pi.reversal(i, j);
@@ -24,6 +25,50 @@ bool apply_0sbp_rev(Permutation &pi) {
   }
   return false;
 }
+
+/* Apply reversal that add n breakpoint (or don nott remove breakpoints if n =
+ * 0) and produces the permutation with lowest value (if the value is higher
+ * than zero in case no breakpoints are added). Returns false if no reversal was
+ * founded. */
+bool apply_nsbp_det_rev_val(Permutation &pi, int n) {
+  int mi, mj;
+  int i, j;
+
+  int max_val = std::numeric_limits<int>::min();
+  bool rev_found = false;
+  for (size_t l = 2; l < pi.size(); l++) {
+    j = max(int(l), pi[l] + 1);
+    i = min(int(l), pi[l] + 1);
+    if (i != j) {
+      int bp_change = pi.strong_breakpoint(i - 1) + pi.strong_breakpoint(j) -
+                      (abs(pi[j] - pi[i - 1]) != 1) -
+                      (abs(pi[j + 1] - pi[i]) != 1);
+      if (bp_change == n) {
+        pi.reversal(i, j);
+        int val = pi.reversal_values();
+        if (val > max_val) {
+          mi = i;
+          mj = j;
+          max_val = val;
+          rev_found = true;
+        }
+        pi.reversal(i, j);
+      }
+    }
+  }
+
+  if (rev_found && (max_val > 0 || n != 0)) {
+    pi.reversal(mi, mj);
+    return true;
+  }
+  return false;
+}
+
+bool apply_0sbp_det_rev_val(Permutation &pi) { return apply_nsbp_det_rev_val(pi, 0); }
+
+bool apply_1sbp_det_rev_val(Permutation &pi) { return apply_nsbp_det_rev_val(pi, 1); }
+
+bool apply_2sbp_det_rev_val(Permutation &pi) { return apply_nsbp_det_rev_val(pi, 2); }
 
 /* Try to apply a deterministic reversal that remove a strong breakpoint,
  * return false if not possible */
@@ -176,7 +221,7 @@ int reversal_distance_estimation(Permutation pi) {
   bool ok;
 
   while (!pi.is_iota()) {
-    ok = apply_2sbp_det_rev(pi) || apply_1sbp_det_rev(pi);
+    ok = apply_2sbp_det_rev(pi) || apply_1sbp_det_rev(pi);// || apply_0sbp_det_rev_val(pi);
     if (!ok) {
       int e = pi.end_of_strong_strip(1);
       pi.reversal(e + 1, pi.pos(e));

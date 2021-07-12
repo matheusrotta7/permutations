@@ -1,4 +1,5 @@
 #include "permutation.hpp"
+#include <iostream>
 #include <algorithm>
 #include <cassert>
 #include <sstream>
@@ -53,14 +54,27 @@ void Permutation::renumber(const Permutation &g, const Permutation &h) {
   record_positions();
 }
 
+int Permutation::reversal_values() const {
+  int i,j,val = 0;
+  for (size_t l = 0; l < this->size(); l++) {
+    j = max(int(l), (*this)[l] + 1);
+    i = min(int(l), (*this)[l] + 1);
+    int bp_change = this->strong_breakpoint(i - 1) + this->strong_breakpoint(j) -
+                    (abs((*this)[j] - (*this)[i - 1]) != 1) -
+                    (abs((*this)[j + 1] - (*this)[i]) != 1);
+    val += bp_change;
+  }
+  return val;
+}
+
 void Permutation::record_positions() {
   correctly_position = 0;
   /* Record list of positions for each label. */
   positions.reset(new vector<Gene>(op_max + 1));
   for (size_t i = 0; i < genes->size(); ++i) {
     (*positions)[abs((*genes)[i])] = i + 1;
-    if ((*genes)[i] == i)
-        correctly_position++;
+    if ((*genes)[i] == int(i))
+      correctly_position++;
   }
 }
 
@@ -81,6 +95,26 @@ bool Permutation::breakpoint(int i) const {
 
 bool Permutation::strong_breakpoint(int i) const {
   return abs((*genes)[i] - (*genes)[i - 1]) != 1;
+}
+
+int Permutation::breakpoints() const {
+    int acc = 0;
+    for (size_t i = 1; i < genes->size(); ++i) {
+        if (breakpoint(i)) {
+            acc++;
+        }
+    }
+    return acc;
+}
+
+int Permutation::strong_breakpoints() const {
+    int acc = 0;
+    for (size_t i = 1; i < genes->size(); ++i) {
+        if (strong_breakpoint(i)) {
+            acc++;
+        }
+    }
+    return acc;
 }
 
 int Permutation::end_of_strip(int i) {

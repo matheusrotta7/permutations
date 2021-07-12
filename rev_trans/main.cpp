@@ -27,7 +27,7 @@ void help(char *name) {
       << "\t" << name << " ALG [OPTIONS]" << endl
       << endl
       << "positional arguments:" << endl
-      << "\tALG                     the algorithm to use (trans, rev, revtrans)"
+      << "\tALG                     the algorithm to use (trans, rev, revtrans, bp, sbp)"
       << endl
       << endl
       << "optional arguments:" << endl
@@ -114,6 +114,10 @@ int main(int argc, char *argv[]) {
         dist = transposition_distance_estimation(*pi);
       } else if (args.alg == "revtrans") {
         dist = reversal_and_transposition_distance_estimation(*pi);
+      } else if (args.alg == "bp") {
+        dist = pi->breakpoints();
+      } else if (args.alg == "sbp") {
+        dist = pi->strong_breakpoints();
       } else {
 		help(argv[0]);
       }
